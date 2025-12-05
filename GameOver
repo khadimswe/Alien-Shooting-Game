@@ -1,0 +1,46 @@
+import pygame, sys
+from pygame.locals import *
+res = (800,800)
+screen =pygame.display.set_mode(res)
+pygame.init()
+clock = pygame.time.Clock()
+FPS = 60
+
+#backgrounds
+bsbg = pygame.image.load("galbg.jpg").convert()
+bg = pygame.transform.scale(bsbg,(800,800))
+position = 0
+def background():
+    global position
+    screen.fill(color=(0, 0, 0))
+    screen.blit(bg, (position, 0))
+    screen.blit(bg,(bg.get_width()+position,0))
+    position -=1
+    if abs(position)> bg.get_width():
+        position = 0
+def gameover_screen(result):
+    font = pygame.font.Font("KnightWarrior-w16n8.otf", 32)
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                sys.exit(0)
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:  # Retry
+                    return True
+                if event.key == pygame.K_m:  # Go to main menu
+                    return False
+
+        background()  # Background for game over screen
+        if result == "lose":
+            gameover_text = font.render("Game Over! Press R to Retry or M for Main Menu", True, (255, 0, 0))
+        elif result == "win":
+            gameover_text = font.render("You Win! Press R to Retry or M for Main Menu", True, (0, 255, 0))
+        background()  # Background for game over screen
+        if result == "lose":
+            gameover_text = font.render("Game Over! Press R to Retry or M for Main Menu", True, (255, 0, 0))
+        elif result == "win":
+            gameover_text = font.render("You Win! Press R to Retry or M for Main Menu", True, (0, 255, 0))
+
+        screen.blit(gameover_text, (screen.get_width() // 2 - gameover_text.get_width() // 2, screen.get_height() // 1.5))
+        pygame.display.flip()
+        clock.tick(FPS)
